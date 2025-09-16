@@ -1,4 +1,289 @@
-# workout-management-project
-This is just a begineer friendly project in C++ for workout management system
+/*WORKOUT MANAGEMENT PROJECT*/
+
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+struct Workout {
+	int number;
+	string name;
+	string date;
+	string type_of_workout[100];
+	string time_spent[100];
+};
+
+void RegisterEntry() {
+    
+	Workout w;
+	cout<<"Enter your name:";
+	cin.ignore();
+	getline(cin,w.name);
+	cout<<"Enter today's date:";
+	getline(cin,w.date);
+	cout<<"Enter the number of workouts you done today: ";
+	cin>>w.number;
+	for(int i=0; i<w.number; i++) {
+
+		cout<<"Enter the type of workout "<< i+1 <<" :";
+		cin.ignore();
+		getline(cin,w.type_of_workout[i]);
+		cout<<"Enter time spent:";
+		getline(cin,w.time_spent[i]);
+	}
+	ofstream out("workout.txt",ios::app);
+    out<<"\n====================WORKOUT LOG=================================\n";
+	out <<"Date     :" << w.date <<"\nName     :"<< w.name <<"\nWorkouts :"<< w.number <<endl;
+	for(int i=0; i<w.number; i++) {
+		out<<w.type_of_workout[i]<<"   "<<  w.time_spent[i] <<endl;
+
+	}
+	
+	out.close();
+	cout<<"\n\n************RECORD ADDED****************\n";
+	cout<<"\n__________________________________________________________________\n";
+
+}
+void ViewEntries() {
+	ifstream in("workout.txt");
+	string line;
+	cout<<"\n***************************RECORDS*****************************\n";
+	
+	while(getline(in,line)) {
+		cout<<line<<endl;
+	}
+	in.close();
+	cout<<"\n__________________________________________________________________\n";
+}
+
+void CalculateBMI() {
+	float weight,height;
+	float BMI;
+	cout<<"Enter your height(in meters):";
+	cin>>height;
+	cout<<"Enter your weight(in kgs):";
+	cin>>weight;
+	BMI=weight/(height*height);
+	cout<<"Your BMI is: "<< BMI <<endl;
+	cout<<"\n______________________________________________________________\n";
+	ofstream out("workout.txt",ios::app);
+	out<<"Your BMI is:"<<BMI<<endl;
+	out.close();
+	if(BMI<18.5) {
+		cout<<"You are Underweight.\n";
+	}
+	else if(BMI>25.0 && BMI<29.9) {
+		cout<<"Your are Overweight.\n";
+	} else if(BMI>=18.5 && BMI<=25.0) {
+		cout<<"You are Healthy.\n";
+
+	}
+	else {
+		cout<<"You are Obese.\n";
+	}
+}
+void Suggest_TipsforHealthyPerson() {
+	cout<<"\n________________________________________________________________________\n";
+	cout<<"\n***************NUTRITION TIPS FOR HEALTHY PERSON*************************\n\n";
+	cout<<"1.Fill half your plate with fruits & vegetables.\n";
+	cout<<"2.Choose whole grains like brown rice, oats & millets like jowar,bajra,ragi.\n";
+	cout<<"3.Balance fats smartly-Prioritize unsaturated fats(like olive oil,nuts,avocado).\n";
+	cout<<"4.Eat quality protein-Include lean proteins-beans, lentils, fish, poultry, eggs.\n";
+	cout<<"5.Stay hydrated with water-Drink 1.5-2.5 L of water daily.\n";
+	cout<<"6.Prioritize fiber-rich foods through whole grains, beans, lentils.\n";
+    cout<<"\n________________________________________________________________________\n";
+    
+}
+void Suggest_TipsforUnderweightPerson() {
+	cout<<"\n________________________________________________________________________\n";
+	cout<<"\n****************NUTRITION TIPS FOR UNDERWEIGHT PERSON*********************\n\n";
+	cout<<"1.Eat 5-6 smaller, nutrient-rich meals/snacks daily to boost calorie intake.\n";
+	cout<<"2.Add high-calorie, healthy extras: nuts, seeds, avocados, cheese, olive oil.\n";
+	cout<<"3.Include protein at every meal (1.6-2.2 g/kg body weight) plus strength training.\n";
+	cout<<"4.Drink caloric smoothies or shakes-use whole milk, yogurt, peanut butter, fruits.\n";
+	cout<<"5.Don't skip strength workouts; muscle-building improves healthy weight gain.\n";
+    cout<<"\n________________________________________________________________________\n";
+}
+void Suggest_TipsforOverweightPerson() {
+	cout<<"\n________________________________________________________________________\n";
+	cout<<"\n**************NUTRITION TIPS FOR OVERWEIGHT PERSON*********************\n\n";
+	cout<<"1.Control portions & choose whole foods:fill half your plate with veggies & fruits.\n";
+	cout<<"2.Prioritize lean protein & fiber: fish, poultry, beans, legumes, whole grains.\n";
+	cout<<"3.Limit added sugars, refined carbs & fats:avoid sugary drinks, excess oils, sweets.\n";
+	cout<<"4.Stay hydrated & plan meals/snacks: drink~2L water/day; prep meals and healthy snacks.\n";
+	cout<<"5.Combine regular exercise with mindful habit-aim for 150 min/week activity, strength training & mindful eating.\n";
+    cout<<"\n________________________________________________________________________\n";
+}
+void Suggest_TipsforObesePerson() {
+	cout<<"\n________________________________________________________________________\n";
+	cout<<"\n****************NUTRITION TIPS FOR OBESE PERSON*************************\n\n";
+	cout<<"1.Fill half your plate with non-starchy veggies & fruits at every meal.\n";
+	cout<<"2.Eat lean protein + high-fiber whole grains & legumes to stay full.\n";
+	cout<<"3.Cut added sugar, refined carbs & processed foods-focus on whole foods.\n";
+	cout<<"4.Drink water (~2L/day) and use smaller plates to manage portions.\n";
+	cout<<"5.Move regularly (30-45 min moderate exercise, 3-5x/week) and get 7-8 hrs sleep.\n";
+    cout<<"\n________________________________________________________________________\n";
+}
+void NutritionTips() {
+	int choice;
+	int hasBMI;
+	cout<<"Have you calculated your BMI?(1 for Yes/2 for No):";
+	cin>>hasBMI;
+	if(hasBMI==1) {
+		cout<<"\nChoose your category:\n\n1.Healty\n2.Underweight\n3.Overweight\n4.Obese\n";
+		cout<<"\nEnter choice(1 to 4):";
+		cin>>choice;
+		switch(choice) {
+		case 1:
+			Suggest_TipsforHealthyPerson();
+			break;
+		case 2:
+			Suggest_TipsforUnderweightPerson();
+			break;
+		case 3:
+			Suggest_TipsforOverweightPerson();
+			break;
+		case 4:
+			Suggest_TipsforObesePerson();
+			break;
+		default:
+			cout<<"Invalid choice.Try again!\n";
+
+		}
+		
+	}
+	else if (hasBMI==2){
+		cout<<"Please calculate your BMI first.\n";
+	
+
+	}
+	else{
+	    cout<<"Invalid choice!Choose 1 or 2.\n";
+	 
+	}
+}
+void Workout_ObesePerson() {
+	cout<<"\n________________________________________________________________________\n";
+	cout<<"\n****************WORKOUT TIPS FOR OBESE PERSON*************************\n\n";
+	cout<<"Day 1: 10 min walk + 2 x 10 chair squats.\n";
+	cout<<"Day 2: 5 min walk warmup; 2 x 10 wall pushups + 2 x 10 knee raises.\n";
+	cout<<"Day 3: Rest or gentle stretch/yoga (e.g. HeavyWeight Yoga).\n";
+	cout<<"Day 4: 15 min walking + 2 x 10 stepups + 2 x 30 standing plank.\n";
+	cout<<"Day 5: 10 min swim/aqua or recumbent bike + 2 x 15 calf raises.\n";
+	cout<<"Day 6: 10 min walk; 2 x 10 chair squats + 2 x 10 wall pushups.\n";
+	cout<<"Day 7: Active recovery: gentle yoga, tai chi, or a 20 x min walk.\n";
+    cout<<"\n________________________________________________________________________\n";
+}
+void Workout_HealthyPerson() {
+	cout<<"\n________________________________________________________________________\n";
+	cout<<"\n****************WORKOUT TIPS FOR HEALTHY PERSON*************************\n\n";
+	cout<<"Day 1: Full-body strength (squats, bench press, rows) + 5 min warmup/cooldown.\n";
+	cout<<"Day 2: 30B min cardio (treadmill, bike, or elliptical).\n";
+	cout<<"Day 3: Full-body strength (deadlifts, overhead press, pulldowns).\n";
+	cout<<"Day 4: Active recovery: light cardio + stretching/yoga.\n";
+	cout<<"Day 5: Full-body strength (lunges, chest fly, cable rows).\n";
+	cout<<"Day 6: HIIT/cardio intervals (e.g. 12-3-30 or 54321 style).\n";
+	cout<<"Day 7: Rest or gentle yoga and mobility work.\n";
+    cout<<"\n________________________________________________________________________\n";
+}
+void Workout_UnderweightPerson() {
+	cout<<"\n________________________________________________________________________\n";
+	cout<<"\n****************WORKOUT TIPS FOR UNDERWEIGHT PERSON*********************\n\n";
+	cout<<"Day 1: Full-body strength (squats, bench press, rows) + high-calorie smoothie.\n";
+	cout<<"Day 2: Light walk + bodyweight/core work + snack with nuts & seeds.\n";
+	cout<<"Day 3: Strength (deadlifts, overhead press) + small meal 2-3hrs later.\n";
+	cout<<"Day 4: Rest or gentle yoga/stretch + nut-butter toast.\n";
+	cout<<"Day 5: Strength (lunges, pull-ups/machine) + protein-rich shake.\n";
+	cout<<"Day 6: Bike/swim 20 min + protein + carb snack post-workout.\n";
+	cout<<"Day 7: Active rest + mixed nuts/dried fruit for extra calories.\n";
+    cout<<"\n________________________________________________________________________\n";
+
+}
+
+void Workout_OverweightPerson() {
+	cout<<"\n________________________________________________________________________\n";
+	cout << "\n****************WORKOUT TIPS FOR OVERWEIGHT PERSON***********************\n\n";
+    cout << "Day 1: Warmup + leg press, goblet squats, calf raises.\n";
+	cout<<"Day 2: Light cardio (bike/treadmill 20-30/min) + wall pushups.\n";
+	cout<<"Day 3: Upperbody strength: bench press, rows, shoulder press.\n";
+	cout<<"Day 4: Mobility & balance: yoga/Pilates/stretching 20-30/min.\n";
+	cout<<"Day 5: Fullbody strength: stiff leg deadlifts, stepups, planks.\n";
+	cout<<"Day 6: Cardio intervals: walk/jog or recumbent bike 20-30/min.\n";
+	cout<<"Day 7: Active recovery: gentle swim/walk/yoga.\n";
+	cout<<"\n________________________________________________________________________\n";
+}
+void Workout_Tips(){
+    int choice;
+	int hasBMI;
+	cout<<"Have you calculated your BMI?(1 for Yes/2 for No):";
+	cin>>hasBMI;
+	if(hasBMI==1) {
+		cout<<"\nChoose your category:\n\n1.Healty\n2.Underweight\n3.Overweight\n4.Obese\n";
+		cout<<"\nEnter choice(1 to 4):";
+		cin>>choice;
+		switch(choice) {
+		case 1:
+			Workout_HealthyPerson();
+			break;
+		case 2:
+			Workout_UnderweightPerson();
+			break;
+		case 3:
+			Workout_OverweightPerson();
+			break;
+		case 4:
+			Workout_ObesePerson();
+			break;
+		default:
+			cout<<"Invalid choice.Try again!\n";
+
+		}
+		
+	}
+	else if (hasBMI==2){
+		cout<<"Please calculate your BMI first.\n";
+		
+
+	}
+	else{
+	    cout<<"Invalid choice!Choose 1 or 2.\n";
+
+	}
+    
+}
+int main(){
+    int choice_again;
+    cout<<"\n                WELCOME TO GRIND GEAR GYM                    \n";
+    do{
+        
+        cout<<"\n===============================================================\n";
+        cout<<"\n                 WORKOUT TRACKER MENU                                 \n";
+        cout<<"1.Register Entry.\n";
+        cout<<"2.View All Entries.\n";
+        cout<<"3.Calculate BMI.\n";
+        cout<<"4.Nutrition Tips.\n";
+        cout<<"5.Workout Tips.\n";
+        cout<<"0.Exit.\n";
+        cout<<"\n_________________________________________________________________\n";
+        cout<<"ENTER YOUR CHOICE(0 to 5):";
+        cin>>choice_again;
+        
+        switch(choice_again){
+            case 1:RegisterEntry();         break;
+            case 2:ViewEntries();           break;
+            case 3:CalculateBMI();          break;
+            case 4:NutritionTips();         break;
+            case 5:Workout_Tips();          break;
+            case 0:cout << "\nThank you for using the Workout Management System.\n";
+                cout << "Stay healthy. Stay consistent.\n";
+                cout << "Goodbye!\n";
+                break;
+            default: cout<<"Invalid choice. Try again!\n";
+            
+        }
+    }while(choice_again!=0);
+    return 0;
+}
+
 
 		
